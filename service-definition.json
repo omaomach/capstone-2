@@ -1,0 +1,33 @@
+{
+    "cluster": "myapp-cluster",
+    "serviceName": "myapp-service",
+    "taskDefinition": "myapp-task:1",
+    "loadBalancers": [
+      {
+        "targetGroupArn": "arn:aws:elasticloadbalancing:eu-west-1:574128098399:targetgroup/myapp-tg-blue/0d0415b4f6192c1f",
+        "containerName": "myapp-container",
+        "containerPort": 3000
+      }
+    ],
+    "desiredCount": 1,
+    "launchType": "FARGATE",
+    "platformVersion": "LATEST",
+    "deploymentController": {
+      "type": "CODE_DEPLOY"
+    },
+    "networkConfiguration": {
+      "awsvpcConfiguration": {
+        "subnets": [
+          "subnet-08fcceca8f35d431b",
+          "subnet-0e343cc7ec2de9d71",
+          "subnet-0e7154fddc01f76ec"
+        ],
+        "securityGroups": [
+          "sg-015f86aaf77a0d94d"
+        ],
+        "assignPublicIp": "ENABLED"
+      }
+    },
+    "healthCheckGracePeriodSeconds": 60,
+    "schedulingStrategy": "REPLICA"
+  }
