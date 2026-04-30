@@ -3,3 +3,5 @@ npm-debug.log
 .DS_Store
 *.log
 imagedefinitions.json
+imageDetail.json
+deployment-group.json
