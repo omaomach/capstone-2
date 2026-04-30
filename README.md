@@ -171,8 +171,8 @@ The alarm was verified end-to-end by temporarily scaling the service to 0 tasks.
 
 ## Pipeline Flow Diagram
 
-![Pipeline diagram](pipeline-flow.png)
-![Pipeline diagram](blue-green-switch.png)
+![Pipeline diagram](docs/screenshots/pipeline-flow.png)
+![Pipeline diagram](docs/screenshots/blue-green-switch.png)
 
 ---
 
