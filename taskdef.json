@@ -4,7 +4,7 @@
   "containerDefinitions": [
     {
       "name": "myapp-container",
-      "image": "574128098399.dkr.ecr.eu-west-1.amazonaws.com/myapp-repo:latest",
+      "image": "<IMAGE>",
       "portMappings": [
         {
           "containerPort": 3000,
