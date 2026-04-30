@@ -9,4 +9,4 @@ This repository contains a sample Node.js app and AWS configuration files for a 
 3. CodeBuild runs tests → builds Docker image → pushes to ECR.
 4. CodeDeploy updates ECS service with new image.
 5. ECS service serves app behind Application Load Balancer.
-# capstone-2
+
