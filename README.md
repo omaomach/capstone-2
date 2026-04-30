@@ -171,7 +171,8 @@ The alarm was verified end-to-end by temporarily scaling the service to 0 tasks.
 
 ## Pipeline Flow Diagram
 
-![Pipeline diagram](pipeline-diagram.png)
+![Pipeline diagram](pipeline-flow.png)
+![Pipeline diagram](blue-green-switch.png)
 
 ---
 
@@ -180,7 +181,6 @@ The alarm was verified end-to-end by temporarily scaling the service to 0 tasks.
 ```
 capstone-2/
 ├── README.md
-├── pipeline-diagram.png
 ├── Dockerfile
 ├── package.json
 ├── package-lock.json
