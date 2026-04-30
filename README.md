@@ -56,20 +56,18 @@ Verified locally: tests pass, Docker container runs, and the app responds at `lo
 
 Created a private ECR repository named `myapp-repo` in `eu-west-1` and pushed the locally built image to validate the registry and capture the URI for downstream configuration.
 
-**Repository URI:** `574128098399.dkr.ecr.eu-west-1.amazonaws.com/myapp-repo`
-
 ![ECR repository created](docs/screenshots/04-ecr-repo-created.png)
 ![Image pushed to ECR](docs/screenshots/05-ecr-image-pushed.png)
-![ECR scan results](docs/screenshots/05b-ecr-scan-results.png)
 
 ### Step 3: Create ECS Cluster and Service
 
 **IAM Role:** `ecsTaskExecutionRole` with `AmazonECSTaskExecutionRolePolicy` and an inline `AllowCreateLogGroup` policy to allow the task definition to auto-create its CloudWatch log group on first start.
 
-![ECS Task Execution Role](docs/screenshots/06-ecs-task-execution-role.png)
+![ECS Task Execution Role](docs/screenshots/06b-ecs-task-execution-role.png)
 
 **Task Definition (`myapp-task`):** Registered with the `<IMAGE>` placeholder for CodeDeploy substitution and a `logConfiguration` block routing container logs to CloudWatch.
 
+![ECS Task Execution Role](docs/screenshots/06a-ecs-task-def.png)
 ![Task definition registered](docs/screenshots/07-taskdef-registered.png)
 
 **Security Groups:**
@@ -77,7 +75,8 @@ Created a private ECR repository named `myapp-repo` in `eu-west-1` and pushed th
 - `myapp-alb-sg` — allows ports 80 and 8080 from the internet
 - `myapp-ecs-sg` — allows port 3000 only from `myapp-alb-sg`
 
-![Security groups configured](docs/screenshots/08-security-groups.png)
+![Security groups configured](docs/screenshots/08a-alb-security-group.png)
+![Security groups configured](docs/screenshots/08b-ecs-security-group.png)
 
 **Target Groups (Blue/Green):** `myapp-tg-blue` and `myapp-tg-green`, both target type `IP` (required for Fargate `awsvpc` networking) on HTTP/3000.
 
@@ -96,7 +95,7 @@ Created a private ECR repository named `myapp-repo` in `eu-west-1` and pushed th
 
 **ECS Service (`myapp-service`):** Created with `deploymentController.type: CODE_DEPLOY` to support the Blue/Green deployment type required by the lab. The service launched a Fargate task that registered into the blue target group, with the ALB serving traffic on port 80.
 
-![ECS service running](docs/screenshots/12-ecs-service-running.png)
+![ECS service running](docs/screenshots/12-blue-healkthy-target.png)
 ![App accessible via ALB](docs/screenshots/13-app-via-alb.png)
 
 ### Step 4: Configure CodeBuild
@@ -146,18 +145,21 @@ Created `myapp-pipeline` chaining four stages:
 
 The pipeline triggers on every push to `main`. After Build completes, it pauses at the Approval stage for manual review, then proceeds to Deploy. The `<IMAGE>` placeholder in `taskdef.json` is substituted at deploy time using `imageDetail.json` from the build artifact.
 
-![Pipeline running](docs/screenshots/20-pipeline-running.png)
-![Pipeline succeeded](docs/screenshots/21-pipeline-success.png)
-![Pipeline with approval stage](docs/screenshots/22-pipeline-with-approval.png)
 ![Pipeline pending approval](docs/screenshots/23-pipeline-pending-approval.png)
 ![Approval review modal](docs/screenshots/24-pipeline-approval-modal.png)
 ![Pipeline fully complete](docs/screenshots/25-pipeline-fully-complete.png)
+![Pipeline succeeded](docs/screenshots/21-pipeline-success.png)
 
 ### Step 7: Add Monitoring
 
 **SNS Topic (`myapp-alerts`):** Created with an email subscription to `omao@comraid.io`, confirmed via the AWS confirmation email.
 
+![SNS Topic](docs/screenshots/sns-topic.png)
+![SNS Subscription](docs/screenshots/sns-subscription.png)
+
 **CloudWatch Alarm (`myapp-no-running-tasks`):** Monitors `RunningTaskCount` (from Container Insights) on the ECS service, firing when fewer than 1 task is running for 2 consecutive minutes. Both `ALARM` and `OK` transitions notify the SNS topic.
+
+![CloudWatch ALARM email](docs/screenshots/cloud-watch-alarm.png)
 
 **Auto-Rollback Wiring:** The alarm is associated with the CodeDeploy deployment group, so a failed deploy that leaves no running tasks triggers automatic rollback to the previous version.
 
