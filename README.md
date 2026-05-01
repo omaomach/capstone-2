@@ -170,9 +170,27 @@ The pipeline triggers on every push to `main`. After Build completes, it pauses 
 
 **CloudWatch Alarm (`myapp-no-running-tasks`):** Monitors `RunningTaskCount` (from Container Insights) on the ECS service, firing when fewer than 1 task is running for 2 consecutive minutes. Both `ALARM` and `OK` transitions notify the SNS topic.
 
+aws cloudwatch put-metric-alarm \
+ --alarm-name myapp-no-running-tasks \
+ --metric-name RunningTaskCount \
+ --namespace ECS/ContainerInsights \
+ --statistic Average --period 60 --evaluation-periods 2 \
+ --threshold 1 --comparison-operator LessThanThreshold \
+ --treat-missing-data breaching \
+ --dimensions Name=ClusterName,Value=myapp-cluster Name=ServiceName,Value=myapp-service \
+ --alarm-actions arn:aws:sns:eu-west-1:574128098399:myapp-alerts \
+ --ok-actions arn:aws:sns:eu-west-1:574128098399:myapp-alerts \
+ --region eu-west-1
+
 ![CloudWatch ALARM email](docs/screenshots/cloud-watch-alarm.png)
 
 **Auto-Rollback Wiring:** The alarm is associated with the CodeDeploy deployment group, so a failed deploy that leaves no running tasks triggers automatic rollback to the previous version.
+
+aws deploy update-deployment-group \
+ --application-name myapp-codedeploy \
+ --current-deployment-group-name myapp-deployment-group \
+ --alarm-configuration enabled=true,alarms=[{name=myapp-no-running-tasks}] \
+ --region eu-west-1
 
 The alarm was verified end-to-end by temporarily scaling the service to 0 tasks. The alarm transitioned `OK → ALARM`, an email notification was delivered, and the state returned to `OK` once the service was restored.
 
