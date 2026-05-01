@@ -100,9 +100,9 @@ docker push 574128098399.dkr.ecr.eu-west-1.amazonaws.com/myapp-repo:latest
 
 ![ALB created](docs/screenshots/10-alb-created.png)
 
-**ECS Cluster (`myapp-cluster`):** Fargate-only, with Container Insights enabled.
+**ECS Cluster (`myapp-cluster`):** Fargate-only, with Container Insights enabled.No Services attached yet
 
-![ECS cluster](docs/screenshots/11-ecs-cluster.png)
+![ECS cluster](docs/screenshots/11a-ecs-cluster.png)
 
 **ECS Service (`myapp-service`):** Created with `deploymentController.type: CODE_DEPLOY` to support the Blue/Green deployment type required by the lab. The service launched a Fargate task that registered into the blue target group, with the ALB serving traffic on port 80.
 
