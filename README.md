@@ -56,6 +56,11 @@ Verified locally: tests pass, Docker container runs, and the app responds at `lo
 
 Created a private ECR repository named `myapp-repo` in `eu-west-1` and pushed the locally built image to validate the registry and capture the URI for downstream configuration.
 
+aws ecr get-login-password --region eu-west-1 | \
+ docker login --username AWS --password-stdin 574128098399.dkr.ecr.eu-west-1.amazonaws.com
+docker tag myapp:latest 574128098399.dkr.ecr.eu-west-1.amazonaws.com/myapp-repo:latest
+docker push 574128098399.dkr.ecr.eu-west-1.amazonaws.com/myapp-repo:latest
+
 ![ECR repository created](docs/screenshots/04-ecr-repo-created.png)
 ![Image pushed to ECR](docs/screenshots/05-ecr-image-pushed.png)
 
