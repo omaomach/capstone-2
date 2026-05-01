@@ -48,6 +48,12 @@ A simple Node.js Express app responds with `Hello from AWS CI/CD Capstone Projec
 
 Verified locally: tests pass, Docker container runs, and the app responds at `localhost:3000`.
 
+npm install
+npm test
+docker build -t myapp:latest .
+docker run -d -p 3000:3000 --name myapp myapp:latest
+curl http://localhost:3000
+
 ![Tests passing](docs/screenshots/01-tests-passing.png)
 ![Docker container running](docs/screenshots/02-docker-running.png)
 ![App response locally](docs/screenshots/03-app-response.png)
